@@ -14,4 +14,4 @@ This happens due to the walls between each cell (N-1 walls between them) plus 2 
 This also means all maps generated will have odd dimensions and borders around the entire map.
 This may be good (no limit checking) or bad (ugly dimensions, not a toroidal map as pac-man)
 
-I will try to add more features and a test-set
+I will try to add more features and a better test suite with webhooks
