@@ -20,90 +20,98 @@
 # - Tests
 #-----------------------------------------------
 
-SOUTH = 1
-EAST = 2
+module Mapgen
+  extend self
 
-#-----------------------------------------------
-# Display maze
-#-----------------------------------------------
+  TILE_CLEAR = 0
+  TILE_WALL = 1
+  SLEEP = 0.05 # Use false if no sleep
 
-def display_maze(grid)
-  print "\e[H\r"
-  grid_str = '_' * (grid.first.size << 1).succ
-  grid.each_with_index {|row, y|
-    grid_str << "\n|"
-    bottom = y.succ >= grid.size
-    row.each_with_index {|cell, x|
-      south = (cell & SOUTH != 0 || bottom)
-      right = x.succ >= row.size
-      grid_str << (south ? '_' : ' ')
-      grid_str << (cell >= EAST || right ? '|' : ((south && (!right && row[x.succ] & SOUTH != 0 || bottom)) ? '_' : ' '))
+  SOUTH = 1
+  EAST = 2
+
+  #-----------------------------------------------
+  # Display maze
+  #-----------------------------------------------
+
+  def display_maze(grid)
+    print "\e[H\r"
+    grid_str = '_' * (grid.first.size << 1).succ
+    grid.each_with_index {|row, y|
+      grid_str << "\n|"
+      bottom = y.succ >= grid.size
+      row.each_with_index {|cell, x|
+        south = (cell & SOUTH != 0 || bottom)
+        right = x.succ >= row.size
+        grid_str << (south ? '_' : ' ')
+        grid_str << (cell >= EAST || right ? '|' : ((south && (!right && row[x.succ] & SOUTH != 0 || bottom)) ? '_' : ' '))
+      }
     }
-  }
-  sleep(0.05)
-  puts grid_str
-end
-
-#-----------------------------------------------
-# Maze division
-#-----------------------------------------------
-
-def maze_division(width, height, room_size, display_steps = false)
-  grid = Array.new(height) {Array.new(width, 0)}
-  parts = [0, 0, width, height]
-  until parts.empty?
-    x, y, width, height = parts.pop(4)
-    next if width <= room_size or height <= room_size
-    display_maze(grid) if display_steps
-    if width != height ? width < height : rand(2).zero?
-      h = rand(height - room_size)
-      wy = y + h
-      passage = x + rand(width)
-      x.upto(x + width.pred) {|wx| grid[wy][wx] |= SOUTH if wx != passage}
-      h += 1
-      parts.push(x, y, width, h, x, wy.succ, width, height - h)
-    else
-      w = rand(width - room_size)
-      wx = x + w
-      passage = y + rand(height)
-      y.upto(y + height.pred) {|wy| grid[wy][wx] |= EAST if wy != passage}
-      w += 1
-      parts.push(x, y, w, height, wx.succ, y, width - w, height)
-    end
+    sleep(SLEEP) if SLEEP
+    puts grid_str
   end
-  display_maze(grid) if display_steps
-  grid
-end
 
-#-----------------------------------------------
-# Maze division
-#-----------------------------------------------
+  #-----------------------------------------------
+  # Maze division
+  #-----------------------------------------------
 
-def wall_to_tile(grid)
-  map = [Array.new((grid.first.size << 1).succ, 1)]
-  grid.each_with_index {|row, y|
-    bottom = y.succ >= grid.size
-    walls = [1]
-    ground = [1]
-    row.each_with_index {|cell, x|
-      south = (cell & SOUTH != 0 || bottom)
-      right = x.succ >= row.size
-      walls << 0
-      ground << (south ? 1 : 0)
-      if cell >= EAST or right
-        walls << 1
-        ground << 1
-      elsif south and (not right or row[x.succ] & SOUTH != 0 or bottom)
-        walls << 0
-        ground << 1
+  def maze_division(width, height, room_size, display_steps = false)
+    grid = Array.new(height) {Array.new(width, 0)}
+    parts = [0, 0, width, height]
+    until parts.empty?
+      x, y, width, height = parts.pop(4)
+      next if width <= room_size or height <= room_size
+      display_maze(grid) if display_steps
+      if width != height ? width < height : rand(2).zero?
+        h = rand(height - room_size)
+        wy = y + h
+        passage = x + rand(width)
+        x.upto(x + width.pred) {|wx| grid[wy][wx] |= SOUTH if wx != passage}
+        h += 1
+        parts.push(x, y, width, h, x, wy.succ, width, height - h)
       else
-        walls << 0
-        ground << 0
+        w = rand(width - room_size)
+        wx = x + w
+        passage = y + rand(height)
+        y.upto(y + height.pred) {|wy| grid[wy][wx] |= EAST if wy != passage}
+        w += 1
+        parts.push(x, y, w, height, wx.succ, y, width - w, height)
       end
+    end
+    display_maze(grid) if display_steps
+    grid
+  end
+
+  #-----------------------------------------------
+  # Maze division
+  #-----------------------------------------------
+
+  def wall_to_tile(grid)
+    map = [Array.new((grid.first.size << 1).succ, TILE_WALL)]
+    grid.each_with_index {|row, y|
+      bottom = y.succ >= grid.size
+      walls = [TILE_WALL]
+      ground = [TILE_WALL]
+      row.each_with_index {|cell, x|
+        south = (cell & SOUTH != 0 || bottom)
+        right = x.succ >= row.size
+        walls << 0
+        ground << (south ? TILE_WALL : TILE_CLEAR)
+        if cell >= EAST or right
+          walls << TILE_WALL
+          ground << TILE_WALL
+        elsif south and (not right or row[x.succ] & SOUTH != 0 or bottom)
+          walls << TILE_CLEAR
+          ground << TILE_WALL
+        else
+          walls << TILE_CLEAR
+          ground << TILE_CLEAR
+        end
+      }
+      map << walls << ground
     }
-    map << walls << ground
-  }
-  map
+    map
+  end
 end
 
 #-----------------------------------------------
@@ -121,8 +129,8 @@ if $0 == __FILE__
     # Run
     t = Time.now.to_f
     print "\e[2J"
-    map = maze_division(width, height, room_size)
-    map_tile = wall_to_tile(map)
+    map = Mapgen.maze_division(width, height, room_size, true)
+    map_tile = Mapgen.wall_to_tile(map)
     map_tile.each {|row| puts row.join(' ')}
     puts "#$0 #{width} #{height} #{seed}"
     puts Time.now.to_f - t
