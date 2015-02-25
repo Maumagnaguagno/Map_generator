@@ -24,7 +24,7 @@ def maze_iterdivision(width, height, room_size)
   grid = Array.new(height) {Array.new(width, 0)}
   parts = [0, 0, width, height]
   until parts.empty?
-    x, y, width, height = parts.shift(4)
+    x, y, width, height = parts.pop(4)
     next if width <= room_size or height <= room_size
     display_maze(grid)
     if width != height ? width < height : rand(2).zero?
