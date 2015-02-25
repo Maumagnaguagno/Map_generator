@@ -1,7 +1,31 @@
-# Adapted from http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm
+#!/usr/bin/env ruby
+#-----------------------------------------------
+# Mapgen Iterative division
+#-----------------------------------------------
+# Mau Magnaguagno
+#-----------------------------------------------
+# Map generator for the lazy game designer
+#-----------------------------------------------
+# Adapted from
+# http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm
+#-----------------------------------------------
+# Feb 2015
+# - Created
+# - Using a iterative mode to speed up
+# - Using shift instead of pop to emulate recursion/stack behavior
+# - Using string as buffer to achieve faster single print
+# - Added wall to tile conversion system
+#-----------------------------------------------
+# TODOs
+# - Tests
+#-----------------------------------------------
 
 SOUTH = 1
 EAST = 2
+
+#-----------------------------------------------
+# Display maze
+#-----------------------------------------------
 
 def display_maze(grid)
   print "\e[H\r"
@@ -20,13 +44,17 @@ def display_maze(grid)
   puts grid_str
 end
 
-def maze_iterdivision(width, height, room_size)
+#-----------------------------------------------
+# Maze division
+#-----------------------------------------------
+
+def maze_division(width, height, room_size, display_steps = false)
   grid = Array.new(height) {Array.new(width, 0)}
   parts = [0, 0, width, height]
   until parts.empty?
     x, y, width, height = parts.pop(4)
     next if width <= room_size or height <= room_size
-    display_maze(grid)
+    display_maze(grid) if display_steps
     if width != height ? width < height : rand(2).zero?
       h = rand(height - room_size)
       wy = y + h
@@ -43,9 +71,13 @@ def maze_iterdivision(width, height, room_size)
       parts.push(x, y, w, height, wx.succ, y, width - w, height)
     end
   end
-  display_maze(grid)
-  wall_to_tile(grid)
+  display_maze(grid) if display_steps
+  grid
 end
+
+#-----------------------------------------------
+# Maze division
+#-----------------------------------------------
 
 def wall_to_tile(grid)
   map = [Array.new((grid.first.size << 1).succ, 1)]
@@ -71,20 +103,28 @@ def wall_to_tile(grid)
     }
     map << walls << ground
   }
-  map.each {|row| puts row.join(' ')}
+  map
 end
+
+#-----------------------------------------------
+# Main
+#-----------------------------------------------
 
 if $0 == __FILE__
   begin
+    # Arguments
     width = (ARGV[0] || 10).to_i
     height = (ARGV[1] || width).to_i
     room_size = (ARGV[2] || 1).to_i
     seed = (ARGV[3] || rand(0xFFFFFFFF)).to_i
     srand(seed)
+    # Run
     t = Time.now.to_f
     print "\e[2J"
-    maze_iterdivision(width, height, room_size)
-    puts "#$0 #{width} #{height} #{seed}" 
+    map = maze_division(width, height, room_size)
+    map_tile = wall_to_tile(map)
+    map_tile.each {|row| puts row.join(' ')}
+    puts "#$0 #{width} #{height} #{seed}"
     puts Time.now.to_f - t
   rescue
     puts $!, $@
