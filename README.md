@@ -1,7 +1,7 @@
 # Map generator
 [![Build Status](https://travis-ci.org/Maumagnaguagno/Map_generator.png)](https://travis-ci.org/Maumagnaguagno/Map_generator)
 
-Map generator for the lazy game designers
+Map generator for the lazy game designer
 
 Adapted from http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm
 Original https://gist.github.com/jamis/761525
@@ -16,4 +16,6 @@ This happens due to the walls between each cell (N-1 walls between them) plus 2 
 This also means all maps generated will have odd dimensions and borders around the entire map.
 This may be good (no limit checking) or bad (ugly dimensions, not a toroidal map as pac-man)
 
-I will try to add more features and a better test suite with webhooks
+I will try to add more features about File output and error handling as time goes on.
+
+Using Travis CI with unit testing to be safe against errors.
