@@ -1,5 +1,6 @@
 # Map generator
 [![Build Status](https://travis-ci.org/Maumagnaguagno/Map_generator.png)](https://travis-ci.org/Maumagnaguagno/Map_generator)
+
 Map generator for the lazy game designers
 
 Adapted from http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm
