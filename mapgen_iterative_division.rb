@@ -95,7 +95,7 @@ module Mapgen
       row.each_with_index {|cell, x|
         south = (cell & SOUTH != 0 || bottom)
         right = x.succ >= row.size
-        walls << 0
+        walls << TILE_CLEAR
         ground << (south ? TILE_WALL : TILE_CLEAR)
         if cell >= EAST or right
           walls << TILE_WALL
