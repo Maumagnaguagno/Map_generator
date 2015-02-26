@@ -56,6 +56,7 @@ module Mapgen
   #-----------------------------------------------
 
   def maze_division(width, height, room_size, display_steps = false)
+    raise 'Zero-sized dimension' if width.zero? or height.zero?
     grid = Array.new(height) {Array.new(width, 0)}
     parts = [0, 0, width, height]
     until parts.empty?
