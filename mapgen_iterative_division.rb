@@ -23,12 +23,9 @@
 module Mapgen
   extend self
 
-  TILE_CLEAR = 0
-  TILE_WALL = 1
-  SLEEP = 0.05 # Use false if no sleep
-
   SOUTH = 1
   EAST = 2
+  SLEEP = 0.02 # Use nil to avoid waits
 
   #-----------------------------------------------
   # Display maze
@@ -37,12 +34,14 @@ module Mapgen
   def display_maze(grid)
     print "\e[H\r"
     grid_str = '_' * (grid.first.size << 1).succ
+    height = grid.size.pred
+    width = grid.first.size.pred
     grid.each_with_index {|row, y|
       grid_str << "\n|"
-      bottom = y.succ >= grid.size
+      bottom = y == height
       row.each_with_index {|cell, x|
         south = (cell & SOUTH != 0 || bottom)
-        right = x.succ >= row.size
+        right = x == width
         grid_str << (south ? '_' : ' ')
         grid_str << (cell >= EAST || right ? '|' : ((south && (!right && row[x.succ] & SOUTH != 0 || bottom)) ? '_' : ' '))
       }
@@ -55,7 +54,7 @@ module Mapgen
   # Maze division
   #-----------------------------------------------
 
-  def maze_division(width, height, room_size, display_steps = false)
+  def maze_division(width, height, room_size = 1, display_steps = false)
     raise 'Zero-sized dimension' if width.zero? or height.zero?
     grid = Array.new(height) {Array.new(width, 0)}
     parts = [0, 0, width, height]
@@ -84,30 +83,50 @@ module Mapgen
   end
 
   #-----------------------------------------------
-  # Maze division
+  # Wall to tile
   #-----------------------------------------------
 
-  def wall_to_tile(grid)
-    map = [Array.new((grid.first.size << 1).succ, TILE_WALL)]
+  def wall_to_tile(grid, tile_clear = 0, tile_wall = 1)
+    map = [Array.new((grid.first.size << 1).succ, tile_wall)]
+    height = grid.size.pred
+    width = grid.first.size.pred
     grid.each_with_index {|row, y|
-      bottom = y.succ >= grid.size
-      walls = [TILE_WALL]
-      ground = [TILE_WALL]
+      bottom = y == height
+      walls = [tile_wall]
+      ground = [tile_wall]
       row.each_with_index {|cell, x|
         south = (cell & SOUTH != 0 || bottom)
-        right = x.succ >= row.size
-        walls << TILE_CLEAR
-        ground << (south ? TILE_WALL : TILE_CLEAR)
+        right = x == width
         if cell >= EAST or right
-          walls << TILE_WALL
-          ground << TILE_WALL
-        elsif south and (not right or row[x.succ] & SOUTH != 0 or bottom)
-          walls << TILE_CLEAR
-          ground << TILE_WALL
+          walls << tile_clear << tile_wall
+          ground << (south ? tile_wall : tile_clear) << tile_wall
         else
-          walls << TILE_CLEAR
-          ground << TILE_CLEAR
+          walls << tile_clear << tile_clear
+          if south and (not right or row[x.succ] & SOUTH != 0 or bottom)
+            ground << tile_wall << tile_wall
+          else
+            ground << (south ? tile_wall : tile_clear) << tile_clear
+          end
         end
+=begin
+        walls << tile_clear
+        case cell
+        when 0
+          ground << tile_clear
+          walls << tile_clear
+        when 1
+          ground << tile_wall
+          walls << tile_clear
+        when 2
+          ground << tile_clear
+          walls << tile_wall
+          ground << tile_wall
+        when 3
+          ground << tile_wall
+          walls << tile_wall
+          ground << tile_wall
+        end
+=end
       }
       map << walls << ground
     }
@@ -131,10 +150,11 @@ if $0 == __FILE__
     t = Time.now.to_f
     print "\e[2J"
     map = Mapgen.maze_division(width, height, room_size, true)
-    map_tile = Mapgen.wall_to_tile(map)
-    map_tile.each {|row| puts row.join(' ')}
-    puts "#$0 #{width} #{height} #{seed}"
+    map_tile = Mapgen.wall_to_tile(map, ' ', '#')
+    puts "#$0 #{width} #{height} #{room_size} #{seed}"
     puts Time.now.to_f - t
+    puts map.map {|row| row.join}.join("\n")
+    puts map_tile.map {|row| row.join}.join("\n")
   rescue
     puts $!, $@
     STDIN.gets
