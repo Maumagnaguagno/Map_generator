@@ -16,9 +16,6 @@
 # - Using string as buffer to achieve faster single print
 # - Added wall to tile conversion system
 #-----------------------------------------------
-# TODOs
-# - Tests
-#-----------------------------------------------
 
 module Mapgen
   extend self
