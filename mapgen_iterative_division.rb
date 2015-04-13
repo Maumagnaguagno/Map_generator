@@ -87,45 +87,26 @@ module Mapgen
     map = [Array.new((grid.first.size << 1).succ, tile_wall)]
     height = grid.size.pred
     width = grid.first.size.pred
-    grid.each_with_index {|row, y|
+    grid.each_with_index {|row,y|
       bottom = y == height
       walls = [tile_wall]
       ground = [tile_wall]
-      row.each_with_index {|cell, x|
+      row.each_with_index {|cell,x|
         south = (cell & SOUTH != 0 || bottom)
         right = x == width
         if cell >= EAST or right
-          walls << tile_clear << tile_wall
-          ground << (south ? tile_wall : tile_clear) << tile_wall
+          walls.push(tile_clear, tile_wall)
+          ground.push(south ? tile_wall : tile_clear, tile_wall)
         else
-          walls << tile_clear << tile_clear
+          walls.push(tile_clear, tile_clear)
           if south and (not right or row[x.succ] & SOUTH != 0 or bottom)
-            ground << tile_wall << tile_wall
+            ground.push(tile_wall, tile_wall)
           else
-            ground << (south ? tile_wall : tile_clear) << tile_clear
+            ground.push(tile_clear, tile_clear)
           end
         end
-=begin
-        walls << tile_clear
-        case cell
-        when 0
-          ground << tile_clear
-          walls << tile_clear
-        when 1
-          ground << tile_wall
-          walls << tile_clear
-        when 2
-          ground << tile_clear
-          walls << tile_wall
-          ground << tile_wall
-        when 3
-          ground << tile_wall
-          walls << tile_wall
-          ground << tile_wall
-        end
-=end
       }
-      map << walls << ground
+      map.push(walls, ground)
     }
     map
   end
