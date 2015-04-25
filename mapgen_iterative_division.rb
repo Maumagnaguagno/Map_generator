@@ -11,10 +11,12 @@
 #-----------------------------------------------
 # Feb 2015
 # - Created
-# - Using a iterative mode to speed up
-# - Using shift instead of pop to emulate recursion/stack behavior
-# - Using string as buffer to achieve faster single print
+# - Iterative mode to speed up
+# - Emulate recursion with stack behavior
+# - String as buffer to achieve faster print
 # - Added wall to tile conversion system
+# Apr 2015
+# - Moved sleep time constant to an argument
 #-----------------------------------------------
 
 module Mapgen
@@ -22,29 +24,28 @@ module Mapgen
 
   SOUTH = 1
   EAST = 2
-  SLEEP = 0.02 # Use nil to avoid waits
 
   #-----------------------------------------------
   # Display maze
   #-----------------------------------------------
 
-  def display_maze(grid)
+  def display_maze(grid, sleep_time = 0.02)
     print "\e[H\r"
     grid_str = '_' * (grid.first.size << 1).succ
     height = grid.size.pred
     width = grid.first.size.pred
-    grid.each_with_index {|row, y|
+    grid.each_with_index {|row,y|
       grid_str << "\n|"
       bottom = y == height
-      row.each_with_index {|cell, x|
+      row.each_with_index {|cell,x|
         south = (cell & SOUTH != 0 || bottom)
         right = x == width
         grid_str << (south ? '_' : ' ')
         grid_str << (cell >= EAST || right ? '|' : ((south && (!right && row[x.succ] & SOUTH != 0 || bottom)) ? '_' : ' '))
       }
     }
-    sleep(SLEEP) if SLEEP
     puts grid_str
+    sleep(sleep_time) if sleep_time
   end
 
   #-----------------------------------------------
@@ -52,7 +53,7 @@ module Mapgen
   #-----------------------------------------------
 
   def maze_division(width, height, room_size = 1, display_steps = false)
-    raise 'Zero-sized dimension' if width.zero? or height.zero?
+    raise 'Zero-sized dimension' if width.zero? or height.zero? or room_size.zero?
     grid = Array.new(height) {Array.new(width, 0)}
     parts = [0, 0, width, height]
     until parts.empty?
@@ -118,21 +119,26 @@ end
 
 if $0 == __FILE__
   begin
-    # Arguments
-    width = (ARGV[0] || 10).to_i
-    height = (ARGV[1] || width).to_i
-    room_size = (ARGV[2] || 1).to_i
-    seed = (ARGV[3] || rand(0xFFFFFFFF)).to_i
-    srand(seed)
-    # Run
-    t = Time.now.to_f
-    print "\e[2J"
-    map = Mapgen.maze_division(width, height, room_size, true)
-    map_tile = Mapgen.wall_to_tile(map, ' ', '#')
-    puts "#$0 #{width} #{height} #{room_size} #{seed}"
-    puts Time.now.to_f - t
-    puts map.map {|row| row.join}.join("\n")
-    puts map_tile.map {|row| row.join}.join("\n")
+    # Help
+    if ARGV[0] == '-h'
+      puts "#$0 [width=10] [height=width] [room_size=1] [seed=rand(0xFFFFFFFF)]"
+    else
+      # Arguments
+      width = (ARGV[0] || 10).to_i
+      height = (ARGV[1] || width).to_i
+      room_size = (ARGV[2] || 1).to_i
+      seed = (ARGV[3] || rand(0xFFFFFFFF)).to_i
+      srand(seed)
+      # Execute
+      t = Time.now.to_f
+      print "\e[2J"
+      map = Mapgen.maze_division(width, height, room_size, true)
+      map_tile = Mapgen.wall_to_tile(map, ' ', '#')
+      puts "#$0 #{width} #{height} #{room_size} #{seed}"
+      puts Time.now.to_f - t
+      puts map.map {|row| row.join}.join("\n")
+      puts map_tile.map {|row| row.join}.join("\n")
+    end
   rescue
     puts $!, $@
     STDIN.gets
