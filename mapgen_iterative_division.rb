@@ -17,6 +17,9 @@
 # - Added wall to tile conversion system
 # Apr 2015
 # - Moved sleep time constant to an argument
+# Jul 2015
+# - Sleep time is an argument of maze_division
+# - Simplified conditions
 #-----------------------------------------------
 
 module Mapgen
@@ -26,40 +29,20 @@ module Mapgen
   EAST = 2
 
   #-----------------------------------------------
-  # Display maze
-  #-----------------------------------------------
-
-  def display_maze(grid, sleep_time = 0.02)
-    print "\e[H\r"
-    grid_str = '_' * (grid.first.size << 1).succ
-    height = grid.size.pred
-    width = grid.first.size.pred
-    grid.each_with_index {|row,y|
-      grid_str << "\n|"
-      bottom = y == height
-      row.each_with_index {|cell,x|
-        south = (cell & SOUTH != 0 || bottom)
-        right = x == width
-        grid_str << (south ? '_' : ' ')
-        grid_str << (cell >= EAST || right ? '|' : ((south && (!right && row[x.succ] & SOUTH != 0 || bottom)) ? '_' : ' '))
-      }
-    }
-    puts grid_str
-    sleep(sleep_time) if sleep_time
-  end
-
-  #-----------------------------------------------
   # Maze division
   #-----------------------------------------------
 
-  def maze_division(width, height, room_size = 1, display_steps = false)
+  def maze_division(width, height, room_size = 1, sleep_time = nil)
     raise 'Zero-sized dimension' if width.zero? or height.zero? or room_size.zero?
     grid = Array.new(height) {Array.new(width, 0)}
     parts = [0, 0, width, height]
     until parts.empty?
       x, y, width, height = parts.pop(4)
       next if width <= room_size or height <= room_size
-      display_maze(grid) if display_steps
+      if sleep_time
+        display_maze(grid)
+        sleep(sleep_time)
+      end
       if width != height ? width < height : rand(2).zero?
         h = rand(height - room_size)
         wy = y + h
@@ -76,8 +59,28 @@ module Mapgen
         parts.push(x, y, w, height, wx.succ, y, width - w, height)
       end
     end
-    display_maze(grid) if display_steps
     grid
+  end
+
+  #-----------------------------------------------
+  # Display maze
+  #-----------------------------------------------
+
+  def display_maze(grid)
+    print "\e[H\r"
+    grid_str = '_' * (grid.first.size << 1).succ
+    height = grid.size.pred
+    width = grid.first.size.pred
+    grid.each_with_index {|row,y|
+      grid_str << "\n|"
+      bottom = y == height
+      row.each_with_index {|cell,x|
+        south = (cell & SOUTH != 0 || bottom)
+        grid_str << (south ? '_' : ' ')
+        grid_str << (cell >= EAST || x == width ? '|' : ((south && (row[x.succ] & SOUTH != 0 || bottom)) ? '_' : ' '))
+      }
+    }
+    puts grid_str
   end
 
   #-----------------------------------------------
@@ -94,13 +97,12 @@ module Mapgen
       ground = [tile_wall]
       row.each_with_index {|cell,x|
         south = (cell & SOUTH != 0 || bottom)
-        right = x == width
-        if cell >= EAST or right
+        if cell >= EAST or x == width
           walls.push(tile_clear, tile_wall)
           ground.push(south ? tile_wall : tile_clear, tile_wall)
         else
           walls.push(tile_clear, tile_clear)
-          if south and (not right or row[x.succ] & SOUTH != 0 or bottom)
+          if south
             ground.push(tile_wall, tile_wall)
           else
             ground.push(tile_clear, tile_clear)
@@ -119,24 +121,24 @@ end
 if $0 == __FILE__
   begin
     # Help
-    if ARGV[0] == '-h'
-      puts "#$0 [width=10] [height=width] [room_size=1] [seed=rand(0xFFFFFFFF)]"
+    if ARGV.first == '-h'
+      puts "#$0 [width=10] [height=width] [room_size=1] [seed=rand(0xFFFFFFFF)] [sleep=0.02]"
     else
       # Arguments
       width = (ARGV[0] || 10).to_i
       height = (ARGV[1] || width).to_i
       room_size = (ARGV[2] || 1).to_i
       seed = (ARGV[3] || rand(0xFFFFFFFF)).to_i
+      sleep = ARGV[4] ? ARGV[4].to_f : 0.02
       srand(seed)
       # Execute
       t = Time.now.to_f
       print "\e[2J"
-      map = Mapgen.maze_division(width, height, room_size, true)
+      map = Mapgen.maze_division(width, height, room_size, sleep.zero? ? nil : sleep)
+      Mapgen.display_maze(map)
       map_tile = Mapgen.wall_to_tile(map, ' ', '#')
-      puts "#$0 #{width} #{height} #{room_size} #{seed}"
-      puts Time.now.to_f - t
-      puts map.map {|row| row.join}.join("\n")
-      puts map_tile.map {|row| row.join}.join("\n")
+      puts Time.now.to_f - t, "#$0 #{width} #{height} #{room_size} #{seed} #{sleep}"
+      puts map.map {|row| row.join}, map_tile.map {|row| row.join}
     end
   rescue
     puts $!, $@
