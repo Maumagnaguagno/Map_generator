@@ -1,4 +1,4 @@
-# Map generator [![Build Status](https://travis-ci.org/Maumagnaguagno/Map_generator.png)](https://travis-ci.org/Maumagnaguagno/Map_generator)
+# Map generator [![Build Status](https://travis-ci.org/Maumagnaguagno/Map_generator.svg)](https://travis-ci.org/Maumagnaguagno/Map_generator)
 
 Map generator for the lazy game designer
 
