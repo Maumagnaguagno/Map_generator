@@ -6,8 +6,8 @@ rvm:
   - 2.0.0
   - 2.1.5
   - 2.2.0
+  - 2.3.0
   # JRuby
   - jruby-18mode
   - jruby-19mode
-script:
-  - ruby test_mapgen.rb
+script: ruby test_mapgen.rb
