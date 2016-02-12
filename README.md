@@ -23,7 +23,7 @@ This may be good (no limit checking) or bad (ugly dimensions, no toroidal map su
 
 - Execute terminal (ANSI support) with default configurations or user provided values
 ```
-ruby mapgen_iterative_division.rb [width=10] [height=width] [room_size=1] [seed=rand(0xFFFFFFFF)] [sleep=0.02]
+ruby mapgen_iterative_division.rb [width=10] [height=width] [room_size=1] [seed=4] [sleep=0.02]
 ```
 - Execute tests
 ```

@@ -25,6 +25,11 @@
 module Mapgen
   extend self
 
+  SIZE = 10
+  SEED = 4
+  ROOM = 1
+  SLEEP = 0.02
+
   SOUTH = 1
   EAST = 2
 
@@ -32,8 +37,7 @@ module Mapgen
   # Maze division
   #-----------------------------------------------
 
-  def maze_division(width, height, room_size = 1, sleep_time = nil)
-    raise 'Zero-sized dimension' if width.zero? or height.zero? or room_size.zero?
+  def maze_division(width = SIZE, height = width, room_size = ROOM, sleep_time = nil)
     grid = Array.new(height) {Array.new(width, 0)}
     parts = [0, 0, width, height]
     until parts.empty?
@@ -122,14 +126,14 @@ if $0 == __FILE__
   begin
     # Help
     if ARGV.first == '-h'
-      puts "#$0 [width=10] [height=width] [room_size=1] [seed=rand(0xFFFFFFFF)] [sleep=0.02]"
+      puts "#$0 [width=#{SIZE}] [height=width] [room_size=#{ROOM}] [seed=#{SEED}] [sleep=#{SLEEP}]"
     else
       # Arguments
-      width = (ARGV[0] || 10).to_i
+      width = (ARGV[0] || SIZE).to_i
       height = (ARGV[1] || width).to_i
-      room_size = (ARGV[2] || 1).to_i
-      seed = (ARGV[3] || rand(0xFFFFFFFF)).to_i
-      sleep = ARGV[4] ? ARGV[4].to_f : 0.02
+      room_size = (ARGV[2] || ROOM).to_i
+      seed = (ARGV[3] || SEED).to_i
+      sleep = ARGV[4] ? ARGV[4].to_f : SLEEP
       srand(seed)
       # Execute
       t = Time.now.to_f
