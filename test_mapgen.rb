@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative 'mapgen_iterative_division'
+require './mapgen_iterative_division'
 
 class Test_Mapgen < Test::Unit::TestCase
  
