@@ -126,14 +126,14 @@ if $0 == __FILE__
   begin
     # Help
     if ARGV.first == '-h'
-      puts "#$0 [width=#{SIZE}] [height=width] [room_size=#{ROOM}] [seed=#{SEED}] [sleep=#{SLEEP}]"
+      puts "Mapgen [width=#{Mapgen::SIZE}] [height=width] [room_size=#{Mapgen::ROOM}] [seed=#{Mapgen::SEED}] [sleep=#{Mapgen::SLEEP}]"
     else
       # Arguments
-      width = (ARGV[0] || SIZE).to_i
+      width = (ARGV[0] || Mapgen::SIZE).to_i
       height = (ARGV[1] || width).to_i
-      room_size = (ARGV[2] || ROOM).to_i
-      seed = (ARGV[3] || SEED).to_i
-      sleep = ARGV[4] ? ARGV[4].to_f : SLEEP
+      room_size = (ARGV[2] || Mapgen::ROOM).to_i
+      seed = (ARGV[3] || Mapgen::SEED).to_i
+      sleep = ARGV[4] ? ARGV[4].to_f : Mapgen::SLEEP
       srand(seed)
       # Execute
       t = Time.now.to_f
@@ -141,7 +141,7 @@ if $0 == __FILE__
       map = Mapgen.maze_division(width, height, room_size, sleep.zero? ? nil : sleep)
       Mapgen.display_maze(map)
       map_tile = Mapgen.wall_to_tile(map, ' ', '#')
-      puts Time.now.to_f - t, "#$0 #{width} #{height} #{room_size} #{seed} #{sleep}"
+      puts Time.now.to_f - t, "Mapgen #{width} #{height} #{room_size} #{seed} #{sleep}"
       puts map.map {|row| row.join}, map_tile.map {|row| row.join}
     end
   rescue
