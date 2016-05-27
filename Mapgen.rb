@@ -146,6 +146,5 @@ if $0 == __FILE__
     end
   rescue
     puts $!, $@
-    STDIN.gets
   end
 end
