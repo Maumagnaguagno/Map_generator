@@ -7,7 +7,7 @@
 An implementation of the **Recursive Division** algorithm for maze generation, using an iterative approach instead.
 Added wall to tile conversion method to use with tile based engines.
 
-### Execution
+## Execution
 ![execution](https://cloud.githubusercontent.com/assets/11094484/14408449/e29d9948-fecb-11e5-823a-0573234b549e.gif "Animation with execution commands")
 
 - Execute terminal (ANSI support) with default configurations or user provided values
@@ -19,7 +19,7 @@ ruby Mapgen.rb [width=10] [height=width] [room_size=1] [seed=4] [sleep=0.02]
 ruby test_mapgen.rb
 ```
 
-### Dimensions
+## Dimensions
 Maps have ```2 * N + 1``` size for N being width or height, therefore asking a 10x10 map yields a 21x21 tile-based one.
 This happens due to the walls between each cell (N-1 walls between them) plus 2 border walls, therefore we have:
 ```
@@ -27,4 +27,9 @@ This happens due to the walls between each cell (N-1 walls between them) plus 2 
 ```
 
 This also means all maps generated will have odd dimensions and borders around the entire map.
-This may be good (no limit checking) or bad (ugly dimensions, no toroidal map support)
+This may be good (no limit checking) or bad (ugly dimensions, no toroidal map support).
+
+## Projects using Map generator
+- [x3030](https://github.com/pravj/x3030): Maze game for Google Chrome based on [that bug](https://code.google.com/p/chromium/issues/detail?id=533361).
+
+Feel free to use it in your projects and send me a link to put here.
