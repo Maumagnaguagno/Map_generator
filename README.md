@@ -32,4 +32,4 @@ This may be good (no limit checking) or bad (ugly dimensions, no toroidal map su
 ## Projects using Map generator
 - [x3030](https://github.com/pravj/x3030): Maze game for Google Chrome based on [that bug](https://code.google.com/p/chromium/issues/detail?id=533361).
 
-Feel free to use it in your projects and send me a link to put here.
+Feel free to use Map generator in your projects and send me a link to put here.
