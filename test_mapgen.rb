@@ -28,8 +28,7 @@ class Test_Mapgen < Test::Unit::TestCase
     map_tile = Mapgen.wall_to_tile(map, clear, wall)
     map_tile.each {|row|
       row.each {|cell|
-        assert_kind_of(Fixnum, cell)
-        assert(cell == clear || cell == wall)
+        assert(cell.equal?(clear) || cell.equal?(wall))
       }
     }
   end
