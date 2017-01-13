@@ -8,7 +8,9 @@ An implementation of the **Recursive Division** algorithm for maze generation, u
 Added wall to tile conversion method to use with tile based engines.
 
 ## Execution
-![execution](https://cloud.githubusercontent.com/assets/11094484/14408449/e29d9948-fecb-11e5-823a-0573234b549e.gif "Animation with execution commands")
+<p align="center">
+<img src="https://cloud.githubusercontent.com/assets/11094484/14408449/e29d9948-fecb-11e5-823a-0573234b549e.gif" alt="Animation with execution commands"/>
+</p>
 
 - Execute terminal (ANSI support) with default configurations or user provided values
 ```
