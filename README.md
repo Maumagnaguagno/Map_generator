@@ -4,12 +4,11 @@
 An implementation of the **Recursive Division** algorithm for maze generation, using an iterative approach instead.
 Added wall to tile conversion method to use with tile based engines.
 The code was adapted from [Jamis Buck blog](http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm), the original code is in this [gist](https://gist.github.com/jamis/761525).
-
-## Execution
 <p align="center">
 <img src="https://cloud.githubusercontent.com/assets/11094484/14408449/e29d9948-fecb-11e5-823a-0573234b549e.gif" alt="Animation with execution commands"/>
 </p>
 
+## Execution
 - Execute terminal (ANSI support) with default configurations or user provided values
 ```
 ruby Mapgen.rb [width=10] [height=width] [room_size=1] [seed=4] [sleep=0.02]
