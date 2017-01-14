@@ -1,11 +1,9 @@
 # Map generator [![Build Status](https://travis-ci.org/Maumagnaguagno/Map_generator.svg)](https://travis-ci.org/Maumagnaguagno/Map_generator)
 **Map generator for the lazy game designer**
 
-- Adapted from http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm
-- Original https://gist.github.com/jamis/761525
-
 An implementation of the **Recursive Division** algorithm for maze generation, using an iterative approach instead.
 Added wall to tile conversion method to use with tile based engines.
+The code was adapted from [Jamis Buck blog](http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm), the original code is in this [gist](https://gist.github.com/jamis/761525).
 
 ## Execution
 <p align="center">
