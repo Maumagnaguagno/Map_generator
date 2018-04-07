@@ -100,17 +100,13 @@ module Mapgen
       walls = [tile_wall]
       ground = [tile_wall]
       row.each_with_index {|cell,x|
-        south = (cell & SOUTH != 0 || bottom)
+        south = (cell & SOUTH != 0 || bottom) ? tile_wall : tile_clear
         if cell >= EAST or x == width
           walls.push(tile_clear, tile_wall)
-          ground.push(south ? tile_wall : tile_clear, tile_wall)
+          ground.push(south, tile_wall)
         else
           walls.push(tile_clear, tile_clear)
-          if south
-            ground.push(tile_wall, tile_wall)
-          else
-            ground.push(tile_clear, tile_clear)
-          end
+          ground.push(south, south)
         end
       }
       map.push(walls, ground)
