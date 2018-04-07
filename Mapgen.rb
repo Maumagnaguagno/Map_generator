@@ -97,8 +97,7 @@ module Mapgen
     width = grid.first.size.pred
     grid.each_with_index {|row,y|
       bottom = y == height
-      walls = [tile_wall]
-      ground = [tile_wall]
+      map.push(walls = [tile_wall], ground = [tile_wall])
       row.each_with_index {|cell,x|
         south = (cell & SOUTH != 0 || bottom) ? tile_wall : tile_clear
         if cell >= EAST or x == width
@@ -109,7 +108,6 @@ module Mapgen
           ground.push(south, south)
         end
       }
-      map.push(walls, ground)
     }
     map
   end
