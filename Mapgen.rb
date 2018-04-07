@@ -125,11 +125,11 @@ if $0 == __FILE__
       puts "Mapgen [width=#{Mapgen::SIZE}] [height=width] [room_size=#{Mapgen::ROOM}] [seed=#{Mapgen::SEED}] [sleep=#{Mapgen::SLEEP}]"
     else
       # Arguments
-      width = (ARGV[0] || Mapgen::SIZE).to_i
-      height = (ARGV[1] || width).to_i
-      room_size = (ARGV[2] || Mapgen::ROOM).to_i
-      seed = (ARGV[3] || Mapgen::SEED).to_i
-      sleep = ARGV[4] ? ARGV[4].to_f : Mapgen::SLEEP
+      width     = ARGV[0] ? ARGV[0].to_i : Mapgen::SIZE
+      height    = ARGV[1] ? ARGV[1].to_i : width
+      room_size = ARGV[2] ? ARGV[2].to_i : Mapgen::ROOM
+      seed      = ARGV[3] ? ARGV[3].to_i : Mapgen::SEED
+      sleep     = ARGV[4] ? ARGV[4].to_f : Mapgen::SLEEP
       srand(seed)
       # Execute
       t = Time.now.to_f
