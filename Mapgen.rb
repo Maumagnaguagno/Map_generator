@@ -79,9 +79,8 @@ module Mapgen
       grid_str << "\n|"
       bottom = y == height
       row.each_with_index {|cell,x|
-        south = (cell & SOUTH != 0 || bottom)
-        grid_str << (south ? '_' : ' ')
-        grid_str << (cell >= EAST || x == width ? '|' : ((south && (row[x.succ] & SOUTH != 0 || bottom)) ? '_' : ' '))
+        grid_str << (cell & SOUTH != 0 || bottom ? '_' : ' ')
+        grid_str << (cell >= EAST || x == width ? '|' : (cell & row[x.succ] & SOUTH != 0 || bottom ? '_' : ' '))
       }
     }
     puts grid_str
