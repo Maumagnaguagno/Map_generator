@@ -48,7 +48,7 @@ class Test_Mapgen < Test::Unit::TestCase
        '1111301111',
        '0100120020',
        '0220202200'],
-      map.map {|row| row.join}
+      map.map! {|row| row.join}
     )
     assert_equal(
       ['#####################',
@@ -72,7 +72,7 @@ class Test_Mapgen < Test::Unit::TestCase
        '#  ##    ## #     # #',
        '#   # #   #   # #   #',
        '#####################'],
-      map_tile.map {|row| row.join}
+      map_tile.map! {|row| row.join}
     )
   end
 end
