@@ -39,10 +39,10 @@ module Mapgen
 
   def maze_division(width = SIZE, height = width, room_size = ROOM, sleep_time = nil)
     grid = Array.new(height) {Array.new(width, 0)}
+    return grid if width <= room_size or height <= room_size
     parts = [0, 0, width, height]
     until parts.empty?
       x, y, width, height = parts.pop(4)
-      next if width <= room_size or height <= room_size
       if sleep_time
         display_maze(grid)
         sleep(sleep_time)
@@ -53,14 +53,16 @@ module Mapgen
         passage = x + rand(width)
         x.upto(x + width.pred) {|wx| grid[wy][wx] |= SOUTH if wx != passage}
         h += 1
-        parts.push(x, y, width, h, x, wy.succ, width, height - h)
+        parts.push(x, y, width, h) if h > room_size
+        parts.push(x, wy.succ, width, height - h) if height - h > room_size
       else
         w = rand(width - room_size)
         wx = x + w
         passage = y + rand(height)
         y.upto(y + height.pred) {|wy| grid[wy][wx] |= EAST if wy != passage}
         w += 1
-        parts.push(x, y, w, height, wx.succ, y, width - w, height)
+        parts.push(x, y, w, height) if w > room_size
+        parts.push(wx.succ, y, width - w, height) if width - w > room_size
       end
     end
     grid
