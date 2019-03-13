@@ -42,7 +42,10 @@ module Mapgen
     return grid if width <= room_size or height <= room_size
     parts = [0, 0, width, height]
     until parts.empty?
-      x, y, width, height = parts.pop(4)
+      height = parts.pop
+      width = parts.pop
+      y = parts.pop
+      x = parts.pop
       if sleep_time
         display_maze(grid)
         sleep(sleep_time)
