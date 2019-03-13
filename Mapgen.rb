@@ -48,21 +48,17 @@ module Mapgen
         sleep(sleep_time)
       end
       if width != height ? width < height : rand(2).zero?
-        h = rand(height - room_size)
-        wy = y + h
+        wy = y + h = rand(height - room_size)
         passage = x + rand(width)
         x.upto(x + width.pred) {|wx| grid[wy][wx] |= SOUTH if wx != passage}
-        h += 1
-        parts.push(x, y, width, h) if h > room_size
-        parts.push(x, wy.succ, width, height - h) if height - h > room_size
+        parts.push(x, y, width, h) if room_size < h += 1
+        parts.push(x, wy.succ, width, height) if room_size < height -= h
       else
-        w = rand(width - room_size)
-        wx = x + w
+        wx = x + w = rand(width - room_size)
         passage = y + rand(height)
         y.upto(y + height.pred) {|wy| grid[wy][wx] |= EAST if wy != passage}
-        w += 1
-        parts.push(x, y, w, height) if w > room_size
-        parts.push(wx.succ, y, width - w, height) if width - w > room_size
+        parts.push(x, y, w, height) if room_size < w += 1
+        parts.push(wx.succ, y, width, height) if room_size < width -= w
       end
     end
     grid
