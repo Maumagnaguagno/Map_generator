@@ -30,9 +30,6 @@ module Mapgen
   ROOM = 1
   SLEEP = 0.02
 
-  SOUTH = 1
-  EAST = 2
-
   #-----------------------------------------------
   # Maze division
   #-----------------------------------------------
@@ -53,13 +50,13 @@ module Mapgen
       if width != height ? width < height : rand(2).zero?
         wy = y + h = rand(height - room_size)
         passage = x + rand(width)
-        x.upto(x + width.pred) {|wx| grid[wy][wx] |= SOUTH if wx != passage}
+        x.upto(x + width.pred) {|wx| grid[wy][wx] |= 1 if wx != passage}
         parts.push(x, y, width, h) if room_size < h += 1
         parts.push(x, wy.succ, width, height) if room_size < height -= h
       else
         wx = x + w = rand(width - room_size)
         passage = y + rand(height)
-        y.upto(y + height.pred) {|wy| grid[wy][wx] |= EAST if wy != passage}
+        y.upto(y + height.pred) {|wy| grid[wy][wx] |= 2 if wy != passage}
         parts.push(x, y, w, height) if room_size < w += 1
         parts.push(wx.succ, y, width, height) if room_size < width -= w
       end
@@ -80,8 +77,8 @@ module Mapgen
       grid_str << "\n|"
       bottom = y == height
       row.each_with_index {|cell,x|
-        grid_str << (cell & SOUTH != 0 || bottom ? '_' : ' ')
-        grid_str << (cell >= EAST || x == width ? '|' : (cell & row[x.succ] & SOUTH != 0 || bottom ? '_' : ' '))
+        grid_str << (cell.odd? || bottom ? '_' : ' ')
+        grid_str << (cell > 1 || x == width ? '|' : ((cell & row[x.succ]).odd? || bottom ? '_' : ' '))
       }
     }
     puts grid_str
@@ -99,8 +96,8 @@ module Mapgen
       bottom = y == height
       map.push(walls = [tile_wall], ground = [tile_wall])
       row.each_with_index {|cell,x|
-        south = (cell & SOUTH != 0 || bottom) ? tile_wall : tile_clear
-        if cell >= EAST or x == width
+        south = cell.odd? || bottom ? tile_wall : tile_clear
+        if cell > 1 or x == width
           walls.push(tile_clear, tile_wall)
           ground.push(south, tile_wall)
         else
