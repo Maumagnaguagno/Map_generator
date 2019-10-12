@@ -38,8 +38,7 @@ module Mapgen
     grid = Array.new(height) {Array.new(width, 0)}
     return grid if width <= room_size or height <= room_size
     parts = [0, 0, width, height]
-    until parts.empty?
-      height = parts.pop
+    while height = parts.pop
       width = parts.pop
       y = parts.pop
       x = parts.pop
