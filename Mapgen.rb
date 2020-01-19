@@ -36,7 +36,7 @@ module Mapgen
 
   def maze_division(width = SIZE, height = width, room_size = ROOM, sleep_time = nil)
     grid = Array.new(height) {Array.new(width, 0)}
-    return grid if width <= room_size or height <= room_size
+    return grid if width <= room_size or height <= room_size or room_size <= 0
     parts = [0, 0, width, height]
     while height = parts.pop
       width = parts.pop
