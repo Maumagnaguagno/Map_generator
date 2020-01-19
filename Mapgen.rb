@@ -72,12 +72,13 @@ module Mapgen
     grid_str = '_' * (grid.first.size << 1).succ
     height = grid.size.pred
     width = grid.first.size.pred
+    bottom = ' '
     grid.each_with_index {|row,y|
       grid_str << "\n|"
-      bottom = y == height
+      bottom = '_' if y == height
       row.each_with_index {|cell,x|
-        grid_str << (cell.odd? || bottom ? '_' : ' ')
-        grid_str << (cell > 1 || x == width ? '|' : ((cell & row[x.succ]).odd? || bottom ? '_' : ' '))
+        grid_str << (cell.odd? ? '_' : bottom)
+        grid_str << (cell > 1 || x == width ? '|' : ((cell & row[x.succ]).odd? ? '_' : bottom))
       }
     }
     puts grid_str
