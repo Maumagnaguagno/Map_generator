@@ -50,10 +50,10 @@ _________
 ```
 
 ``wall_to_tile`` converts both cells and walls to different tiles, creating 4 tiles for each cell and an extra row and collumn of cells.
-This happens due to the walls between each N cells also becoming tiles (N-1 walls) plus outer border walls (2), rendering: (2M-1)x(2N-1).
+This happens due to the walls between each N cells also becoming tiles (N-1 walls) plus outer border walls (2), rendering: (2M+1)x(2N+1) tile maps.
 
 ```
-(N cells) + (N-1 walls) + (2 walls) = N + N - 1 + 2 = 2N + 1 tiles
+(N cells) + (N-1 walls) + (2 walls) = 2N + 1 tiles
 ```
 
 ```
