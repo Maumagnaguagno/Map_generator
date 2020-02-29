@@ -132,8 +132,7 @@ if $0 == __FILE__
       map = Mapgen.maze_division(width, height, room_size, sleep.zero? ? nil : sleep)
       Mapgen.display_maze(map)
       map_tile = Mapgen.wall_to_tile(map, ' ', '#')
-      puts Time.now.to_f - t, "Mapgen #{width} #{height} #{room_size} #{seed} #{sleep}"
-      puts map.map {|row| row.join}, map_tile.map {|row| row.join}
+      puts Time.now.to_f - t, "Mapgen #{width} #{height} #{room_size} #{seed} #{sleep}", map.map! {|row| row.join}, map_tile.map! {|row| row.join}
     end
   rescue
     puts $!, $@
