@@ -1,4 +1,4 @@
-# Map generator [![Build Status](https://travis-ci.org/Maumagnaguagno/Map_generator.svg)](https://travis-ci.org/Maumagnaguagno/Map_generator) [![Actions Status](https://github.com/Maumagnaguagno/Map_generator/workflows/build/badge.svg)](https://github.com/Maumagnaguagno/Map_generator/actions)
+# Map generator [![Actions Status](https://github.com/Maumagnaguagno/Map_generator/workflows/build/badge.svg)](https://github.com/Maumagnaguagno/Map_generator/actions)
 **Map generator for the lazy game designer**
 
 An implementation of the **Recursive Division** algorithm for maze generation, using an iterative approach instead.
