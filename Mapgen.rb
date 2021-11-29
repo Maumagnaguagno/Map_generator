@@ -92,11 +92,12 @@ module Mapgen
     map = [Array.new((grid.first.size << 1).succ, tile_wall)]
     height = grid.size.pred
     width = grid.first.size.pred
+    bottom = tile_clear
     grid.each_with_index {|row,y|
-      bottom = y == height
+      bottom = tile_wall if y == height
       map.push(walls = [tile_wall], ground = [tile_wall])
       row.each_with_index {|cell,x|
-        south = cell.odd? || bottom ? tile_wall : tile_clear
+        south = cell.odd? ? tile_wall : bottom
         if cell > 1 or x == width
           walls.push(tile_clear, tile_wall)
           ground.push(south, tile_wall)
