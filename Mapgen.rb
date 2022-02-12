@@ -69,7 +69,7 @@ module Mapgen
 
   def display_maze(grid)
     print "\e[H\r"
-    grid_str = '_' * (grid.first.size << 1).succ
+    grid_str = '_' * (grid.first.size << 1 | 1)
     height = grid.size.pred
     width = grid.first.size.pred
     bottom = ' '
@@ -89,7 +89,7 @@ module Mapgen
   #-----------------------------------------------
 
   def wall_to_tile(grid, tile_clear = 0, tile_wall = 1)
-    map = [Array.new((grid.first.size << 1).succ, tile_wall)]
+    map = [Array.new(grid.first.size << 1 | 1, tile_wall)]
     height = grid.size.pred
     width = grid.first.size.pred
     bottom = tile_clear

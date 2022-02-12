@@ -6,16 +6,16 @@ class Test_Mapgen < Test::Unit::TestCase
   def test_dimensions
     max = 20
     1.upto(max) {|height|
-      expected_height = (height << 1).succ
+      expected_height = height << 1 | 1
       1.upto(max) {|width|
-        expected_width = (width << 1).succ
+        expected_width = width << 1 | 1
         map = Mapgen.maze_division(width, height, 2)
         map_tile = Mapgen.wall_to_tile(map)
-        assert_kind_of(Array, map_tile)
-        assert_equal(map_tile.size, expected_height)
+        assert_instance_of(Array, map_tile)
+        assert_equal(expected_height, map_tile.size)
         map_tile.each {|row|
-          assert_kind_of(Array, row)
-          assert_equal(row.size, expected_width)
+          assert_instance_of(Array, row)
+          assert_equal(expected_width, row.size)
         }
       }
     }
