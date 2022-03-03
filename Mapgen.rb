@@ -68,7 +68,7 @@ module Mapgen
   #-----------------------------------------------
 
   def display_maze(grid)
-    print "\e[H\r"
+    print "\e[H"
     grid_str = '_' * (grid.first.size << 1 | 1)
     height = grid.size.pred
     width = grid.first.size.pred
