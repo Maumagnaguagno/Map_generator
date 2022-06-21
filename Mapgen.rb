@@ -125,12 +125,12 @@ if $0 == __FILE__
       height    = ARGV[1] ? ARGV[1].to_i : width
       room_size = ARGV[2] ? ARGV[2].to_i : Mapgen::ROOM
       seed      = ARGV[3] ? ARGV[3].to_i : Mapgen::SEED
-      sleep     = ARGV[4] ? ARGV[4].to_f : Mapgen::SLEEP
+      sleep     = ARGV[4] ? ARGV[4].to_f.nonzero? : Mapgen::SLEEP
       srand(seed)
       # Execute
       t = Time.now.to_f
       print "\e[2J"
-      map = Mapgen.maze_division(width, height, room_size, sleep.zero? ? nil : sleep)
+      map = Mapgen.maze_division(width, height, room_size, sleep)
       Mapgen.display_maze(map)
       map_tile = Mapgen.wall_to_tile(map, ' ', '#')
       puts Time.now.to_f - t, "Mapgen #{width} #{height} #{room_size} #{seed} #{sleep}", map.map!(&:join), map_tile.map!(&:join)
