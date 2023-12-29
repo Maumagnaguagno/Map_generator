@@ -69,9 +69,9 @@ module Mapgen
 
   def display_maze(grid)
     print "\e[H"
-    grid_str = '_' * (grid.first.size << 1 | 1)
+    grid_str = '_' * (grid[0].size << 1 | 1)
     height = grid.size.pred
-    width = grid.first.size.pred
+    width = grid[0].size.pred
     bottom = ' '
     grid.each_with_index {|row,y|
       grid_str << "\n|"
@@ -89,9 +89,9 @@ module Mapgen
   #-----------------------------------------------
 
   def wall_to_tile(grid, tile_clear = 0, tile_wall = 1)
-    map = [Array.new(grid.first.size << 1 | 1, tile_wall)]
+    map = [Array.new(grid[0].size << 1 | 1, tile_wall)]
     height = grid.size.pred
-    width = grid.first.size.pred
+    width = grid[0].size.pred
     bottom = tile_clear
     grid.each_with_index {|row,y|
       bottom = tile_wall if y == height
@@ -117,7 +117,7 @@ end
 if $0 == __FILE__
   begin
     # Help
-    if ARGV.first == '-h'
+    if ARGV[0] == '-h'
       puts "Mapgen [width=#{Mapgen::SIZE}] [height=width] [room_size=#{Mapgen::ROOM}] [seed=#{Mapgen::SEED}] [sleep=#{Mapgen::SLEEP}]"
     else
       # Arguments
