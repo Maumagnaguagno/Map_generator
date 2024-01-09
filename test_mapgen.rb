@@ -1,4 +1,5 @@
 require 'test/unit'
+require 'stringio'
 require './Mapgen'
 
 class Test_Mapgen < Test::Unit::TestCase
@@ -74,5 +75,27 @@ class Test_Mapgen < Test::Unit::TestCase
        '#####################'],
       map_tile.map!(&:join)
     )
+  end
+
+  def test_display_maze
+    srand(Mapgen::SEED)
+    $stdout = StringIO.new
+    map = Mapgen.maze_division
+    Mapgen.display_maze(map)
+    assert_equal("\e[H\
+_____________________
+|_  | |   |_   _____|
+|___  | |_| | |_  | |
+| |   | | | |   |   |
+|  _|_____   _|___|_|
+| |  _  | |_  | |_  |
+| | | | | |  _|  ___|
+| |___|  _|  _______|
+|_________|  _______|
+|  _     _  |     | |
+|___|_|___|___|_|___|
+", $stdout.string)
+  ensure
+    $stdout = STDOUT
   end
 end
