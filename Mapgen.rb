@@ -137,5 +137,6 @@ if $0 == __FILE__
     end
   rescue
     puts $!, $@
+    exit(2)
   end
 end
