@@ -77,8 +77,8 @@ module Mapgen
       grid_str << "\n|"
       bottom = '_' if y == height
       row.each_with_index {|cell,x|
-        grid_str << (cell.odd? ? '_' : bottom)
-        grid_str << (cell > 1 || x == width ? '|' : ((cell & row[x.succ]).odd? ? '_' : bottom))
+        grid_str << (cell.odd? ? '_' : bottom) <<
+                    (cell > 1 || x == width ? '|' : ((cell & row[x.succ]).odd? ? '_' : bottom))
       }
     }
     puts grid_str
